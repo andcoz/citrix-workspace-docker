@@ -35,4 +35,3 @@ I'm using this from latest CachyOS distro.
 - Citrix forgots mail address, it must be given at every logins
 - When starting a session, a blank screen appears, has to put to taskbar first and resize it back again. Seen on KDE 6.7.4
 - Citrix AppProtection is not running, not yet debugged.
->>>>>>> 8e3a8f3 (Inital release)
