@@ -1,0 +1,48 @@
+services:
+  citrix-workspace:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        # Leave blank to auto-scrape the latest Citrix download URL at build
+        # time. Override if want a specific version:
+        # ICACLIENT_URL: "https://downloads.citrix.com/.../linuxx64-XX.X.X.tar.gz"
+        ICACLIENT_URL: ""
+        myID: ${myID}
+    image: citrix-workspace:latest
+    container_name: citrix-workspace
+
+    environment:
+      - DISPLAY=${DISPLAY}
+      - XAUTHORITY=/tmp/xauth_docker
+      - ICAROOT=/opt/Citrix/ICAClient
+      - PULSE_SERVER=unix:/run/user/${myID}/pulse/native
+      - XDG_RUNTIME_DIR=/run/user/${myID}
+
+    volumes:
+      - ./xauth_docker://tmp/xauth_docker:rw
+      # PulseAudio socket, for audio in the remote session.
+      - /run/user/${myID}/pulse:/run/user/${myID}/pulse:ro
+      # Persist Workspace config/logs/credentials across container restarts.
+      - citrix-config:/home/citrixuser/.ICAClient
+
+      # Drop .ica files here to launch them directly (see "Usage" in README).
+      - ./ica-files:/home/citrixuser/ica-files:ro
+
+      - /run/user/${myID}:/run/user/${myID}:ro
+      - ~/.config/pulse/cookie:/home/citrixuser/.config/pulse/cookie:ro
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
+
+    privileged: true
+
+    devices:
+      - /dev:/dev:ro
+    ipc: host  
+    network_mode: host
+
+    restart: no
+
+volumes:
+  citrix-config:
+
