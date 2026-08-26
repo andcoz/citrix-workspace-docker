@@ -1,6 +1,3 @@
-# citrix-workspace-docker
-Dockerized Citrix Workspace app for Linux
-=======
 # Citrix Workspace App (Docker) + Zoom VDI Plugin
 
 This packages Citrix Workspace App for Linux, with the Zoom VDI Citrix
@@ -15,6 +12,7 @@ This project is heavily based on https://github.com/majorcs/ca.dcloud.ICAClient.
 2. Make sure you have xauth isntalled.
 3. Clone the repo to a folder. This will be considered as you're working directory, command should be ran from there.
 4. Sudo run citrix_docker_starter.sh. On first run, it will ask to build the image. If it already exists, it'll start the container.
+
 +1. You can put .ica files into ica-files subdir. This case that file will be picked up and used to launch.
 
 ## What was tested and works fine
