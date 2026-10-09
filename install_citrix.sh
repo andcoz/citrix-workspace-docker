@@ -1,9 +1,17 @@
 #!/bin/bash
-ICACLIENT_URL=$(wget -qO- https://www.citrix.com/downloads/workspace-app/linux/workspace-app-for-linux-latest.html | sed -ne '/icaclient.*amd64\.deb/ s/<a .* rel="\(.*\)" id="downloadcomponent_co.*">/https:\1/p' | sed -e 's/\r//g' | sed 's/[[:blank:]]//g')
+
+if [[ -z "$ICACLIENT_URL" ]] ; then
+    ICACLIENT_URL=$(
+        wget -qO- https://www.citrix.com/downloads/workspace-app/linux/workspace-app-for-linux-latest.html \
+            | sed -ne '/icaclient.*amd64\.deb/ s/<a .* rel="\(.*\)" id="downloadcomponent_co.*">/https:\1/p' \
+            | sed -e 's/\r//g' \
+            | sed 's/[[:blank:]]//g'
+    )
+fi
 
 echo "Using Citrix Workspace download URL: ${ICACLIENT_URL}"
 curl "${ICACLIENT_URL}" --output /tmp/icaclient.deb
-    
+
 USB_PACKAGE_URL=$(wget -qO- https://www.citrix.com/downloads/workspace-app/linux/workspace-app-for-linux-latest.html | sed -ne '/ctxusb.*amd64\.deb/ s/<a .* rel="\(.*\)" id="downloadcomponent_co.*">/https:\1/p' | sed -e 's/\r//g' | sed 's/[[:blank:]]//g')
 curl -s "${USB_PACKAGE_URL}" --output /tmp/usbpackage.deb
 

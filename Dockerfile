@@ -20,6 +20,7 @@ LABEL maintainer="info@matolcsi.me"
 LABEL description="Citrix Workspace App for Linux with Zoom VDI plugin, USB redirection and App Protection enabled"
 SHELL ["/bin/bash", "-c"]
 ARG ICACLIENT_URL=""
+ARG EPAPLUGIN_URL=""
 ARG myID=""
 ARG ZOOM_PLUGIN_URL="https://zoom.us/download/vdi/7.0.11.27050/zoomvdi-universal-plugin-ubuntu_7.0.11.deb"
 # No published checksum found for the Ubuntu .deb (only the CentOS rpm had
@@ -114,16 +115,27 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # Citrix's download link is dynamic and gated behind their downloads page, so
 # (like the Flatpak manifest) we scrape it at build time unless a direct
 # ICACLIENT_URL build-arg is supplied. If Citrix changes their EULA/click-through
-# flow this scrape can break -- if it does, download the linuxx64*.tar.gz
+# flow this scrape can break -- if it does, download the icaclient.*amd64.deb
 # yourself and pass --build-arg ICACLIENT_URL=file:///... or a direct URL.
 COPY install_citrix.sh /tmp/install_citrix.sh
 RUN chmod +x /tmp/install_citrix.sh && /tmp/install_citrix.sh
 
 
-
 # Trust the system CA bundle inside Citrix's own keystore.
 RUN ln -sf /etc/ssl/certs/*.pem "${ICAROOT}/keystore/cacerts/" 2>/dev/null || true; \
     "${ICAROOT}/util/ctx_rehash" "${ICAROOT}/keystore/cacerts/" || true
+
+# ---------------------------------------------------------------------------
+# Fetch and install Citrix EPA Plug In for Linux
+# ---------------------------------------------------------------------------
+# Citrix's download link is dynamic anad gated behind their downloads page, so
+# (like the Flatpak manifest) we scrape it at build time unless a direct
+# EPAPLUGIN_URL build-arg is supplied. If Citrix changes their EULA/click-through
+# flow this scrape can break -- if it does, download the nsepa*.deb
+# yourself and pass --build-arg EPAPLUGIN_URL=file:///... or a direct URL.
+COPY install_citrix.sh /tmp/install_epa.sh
+RUN chmod +x /tmp/install_epa.sh && /tmp/install_epa.sh
+
 
 # ---------------------------------------------------------------------------
 # Zoom VDI Citrix Plugin
