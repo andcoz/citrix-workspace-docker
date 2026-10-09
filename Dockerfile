@@ -172,8 +172,9 @@ RUN EXISTING_USER=$(getent passwd ${myID} | cut -d: -f1) \
       && useradd -m -u ${myID} -g 1000 -s /bin/bash citrixuser; \
     fi
 
-RUN mkdir -p /home/citrixuser/.ICAClient && \
-    chown -R citrixuser:citrixuser /home/citrixuser
+RUN mkdir -p /home/citrixuser/.ICAClient
+COPY All_Regions.ini /home/citrixuser/.ICAClient
+RUN chown -R citrixuser:citrixuser /home/citrixuser
 
 WORKDIR /home/citrixuser
 ENV HOME=/home/citrixuser
