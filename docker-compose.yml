@@ -32,7 +32,7 @@ services:
       - /run/user/${myID}:/run/user/${myID}:ro
       - ~/.config/pulse/cookie:/home/citrixuser/.config/pulse/cookie:ro
       - /etc/localtime:/etc/localtime:ro
-      - /etc/timezone:/etc/timezone:ro
+      # - /etc/timezone:/etc/timezone:ro
 
     privileged: true
 
